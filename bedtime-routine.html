@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mijn Avondritueel Tracker</title>
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --accent: #f1c40f;
+            --success: #2ecc71;
+            --bg: #1a1c24;
+            --card-bg: #2d323f;
+            --text: #ffffff;
+            --text-muted: #a0aec0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .app-container {
+            background: var(--card-bg);
+            padding: 24px;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            max-width: 450px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--accent);
+        }
+
+        header p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .routine-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .routine-card {
+            display: flex;
+            align-items: center;
+            background: #3d4457;
+            padding: 18px;
+            border-radius: 18px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            will-change: transform;
+        }
+
+        .routine-card:active {
+            transform: scale(0.97);
+        }
+
+        .time-box {
+            background: #f1c40f;
+            color: #1a1c24;
+            padding: 6px 12px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 14px;
+            margin-right: 14px;
+            min-width: 60px;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .task-text {
+            flex-grow: 1;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text);
+            transition: all 0.2s ease;
+            pointer-events: none;
+        }
+
+        .checkbox-wrapper {
+            position: relative;
+            width: 28px;
+            height: 28px;
+            z-index: 1;
+        }
+
+        .checkbox-wrapper:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+            border-radius: 50%;
+        }
+
+        .custom-checkbox {
+            width: 100%;
+            height: 100%;
+            border: 2px solid #718096;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            background: #2d323f;
+            pointer-events: none;
+        }
+
+        .custom-checkbox::after {
+            content: "\2605";
+            color: var(--accent);
+            font-size: 14px;
+            display: none;
+        }
+
+        .routine-card.done {
+            background: #252934;
+            opacity: 0.6;
+        }
+
+        .routine-card.done .time-box {
+            background: #4a5568;
+            color: var(--text-muted);
+        }
+
+        .routine-card.done .task-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+
+        .routine-card.done .custom-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+
+        .routine-card.done .custom-checkbox::after {
+            display: block;
+        }
+
+        .sound-btn {
+            background: none;
+            border: none;
+            font-size: 18px;
+            margin-left: 12px;
+            cursor: pointer;
+            opacity: 0.6;
+            padding: 5px;
+            z-index: 1;
+            position: relative;
+        }
+        .sound-btn:hover { opacity: 1; }
+        .sound-btn:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header>
+        <h1>Slaapritme Tracker ✨</h1>
+        <p>Samen klaarmaken voor de nacht</p>
+    </header>
+
+    <div class="routine-list">
+        <div class="routine-card" data-id="avondeten">
+            <div class="time-box">18:00</div>
+            <div class="task-text">Gezellig avondeten 🍽️</div>
+            <div class="checkbox-wrapper" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="custom-checkbox"></div>
+            </div>
+            <button class="sound-btn" data-sound="bell" aria-label="Speel belsignaal">🔊</button>
+        </div>
+
+        <div class="routine-card" data-id="pyjama-wassen">
+            <div class="time-box">18:30</div>
+            <div class="task-text">Wassen &amp; pyjama aan 🛁</div>
+            <div class="checkbox-wrapper" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="custom-checkbox"></div>
+            </div>
+            <button class="sound-btn" data-sound="sparkle" aria-label="Speel magisch geluid">🔊</button>
+        </div>
+
+        <div class="routine-card" data-id="tandenpoetsen">
+            <div class="time-box">18:45</div>
+            <div class="task-text">Tandenpoetsen 🪥</div>
+            <div class="checkbox-wrapper" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="custom-checkbox"></div>
+            </div>
+            <button class="sound-btn" data-sound="sparkle" aria-label="Speel magisch geluid">🔊</button>
+        </div>
+
+        <div class="routine-card" data-id="boekje">
+            <div class="time-box">18:50</div>
+            <div class="task-text">Boekje lezen &amp; praten 📖</div>
+            <div class="checkbox-wrapper" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="custom-checkbox"></div>
+            </div>
+            <button class="sound-btn" data-sound="sparkle" aria-label="Speel magisch geluid">🔊</button>
+        </div>
+
+        <div class="routine-card" data-id="slapen">
+            <div class="time-box">19:00</div>
+            <div class="task-text">In bed, lamp uit &amp; slapen 😴</div>
+            <div class="checkbox-wrapper" role="checkbox" aria-checked="false" tabindex="0">
+                <div class="custom-checkbox"></div>
+            </div>
+            <button class="sound-btn" data-sound="sleep" aria-label="Speel slaapgeluid">🔊</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let audioCtx = null;
+
+    function getAudioCtx() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+            audioCtx.resume();
+        }
+        return audioCtx;
+    }
+
+    function playSound(type) {
+        const ctx = getAudioCtx();
+        const now = ctx.currentTime;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        if (type === 'sparkle') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(523.25, now);
+            osc.frequency.setValueAtTime(659.25, now + 0.08);
+            osc.frequency.setValueAtTime(783.99, now + 0.16);
+            osc.frequency.setValueAtTime(1046.50, now + 0.24);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.5);
+            osc.start(now);
+            osc.stop(now + 0.5);
+        } else if (type === 'bell') {
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(880, now);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 0.6);
+            osc.start(now);
+            osc.stop(now + 0.6);
+        } else if (type === 'sleep') {
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(392.00, now);
+            osc.frequency.exponentialRampToValueAtTime(196.00, now + 0.8);
+            gain.gain.setValueAtTime(0.2, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.0);
+            osc.start(now);
+            osc.stop(now + 1.0);
+        }
+    }
+
+    function toggleCard(card) {
+        const id = card.getAttribute('data-id');
+        const done = card.classList.contains('done');
+        const checkbox = card.querySelector('.checkbox-wrapper');
+
+        if (!done) {
+            card.classList.add('done');
+            checkbox.setAttribute('aria-checked', 'true');
+            localStorage.setItem(id, 'true');
+            playSound('sparkle');
+        } else {
+            card.classList.remove('done');
+            checkbox.setAttribute('aria-checked', 'false');
+            localStorage.setItem(id, 'false');
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const cards = document.querySelectorAll('.routine-card');
+
+        const nu = new Date();
+        const vandaag = nu.toDateString();
+        const laatsteDatum = localStorage.getItem('last_evening_date');
+
+        if (laatsteDatum !== vandaag) {
+            if (nu.getHours() >= 4) {
+                cards.forEach(card => localStorage.removeItem(card.getAttribute('data-id')));
+                localStorage.setItem('last_evening_date', vandaag);
+            } else if (laatsteDatum !== null) {
+                const gisteren = new Date(nu);
+                gisteren.setDate(gisteren.getDate() - 1);
+                localStorage.setItem('last_evening_date', gisteren.toDateString());
+            }
+        }
+
+        cards.forEach(card => {
+            const id = card.getAttribute('data-id');
+            const checkbox = card.querySelector('.checkbox-wrapper');
+            const isDone = localStorage.getItem(id) === 'true';
+
+            if (isDone) {
+                card.classList.add('done');
+                checkbox.setAttribute('aria-checked', 'true');
+            }
+
+            card.addEventListener('click', (e) => {
+                if (e.target.closest('.sound-btn')) return;
+                toggleCard(card);
+            });
+
+            checkbox.addEventListener('keydown', (e) => {
+                if (e.key === ' ' || e.key === 'Space' || e.key === 'Enter') {
+                    e.preventDefault();
+                    toggleCard(card);
+                }
+            });
+        });
+
+        document.querySelectorAll('.sound-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                playSound(btn.getAttribute('data-sound'));
+            });
+        });
+    });
+</script>
+
+</body>
+</html>
